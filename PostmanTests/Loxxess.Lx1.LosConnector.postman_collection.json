@@ -1,0 +1,1207 @@
+{
+	"info": {
+		"_postman_id": "ac6956a2-01bd-4c54-b6bc-f55bbafbe9a3",
+		"name": "Loxxess.Lx1.LosConnector",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "New Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var moment = require('moment');\r",
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"$clientId = pm.collectionVariables.get(\"clientId\");\r",
+									"$orderId = pm.collectionVariables.get(\"orderNumber\");\r",
+									"$knownDate = pm.variables.get(\"knownDate\");\r",
+									"$shippingDeadline = pm.variables.get(\"shippingDeadline\");\r",
+									"\r",
+									"const body = pm.response.json();\r",
+									"\r",
+									"pm.test(\"clientId is 109\", function () {\r",
+									"    pm.expect(body.clientId).to.eql($clientId.toString());\r",
+									"});\r",
+									"\r",
+									"pm.test(\"orderId is correct\", function () {\r",
+									"    pm.expect(body.orderId).to.eql($orderId);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"knownDate is correct\", function () {\r",
+									"    var $isSame = moment(body.knownDate).isSame($knownDate);\r",
+									"\r",
+									"    pm.expect($isSame).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"shippingDeadline is correct\", function () {\r",
+									"    var $isSame = moment(body.shippingDeadlineDate).isSame($shippingDeadline);\r",
+									"\r",
+									"    pm.expect($isSame).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Location is present in head\", function () {\r",
+									"    pm.response.to.have.header(\"Location\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment');\r",
+									"\r",
+									"var uuid = require('uuid');\r",
+									"var myGuid = uuid.v4();\r",
+									"\r",
+									"pm.collectionVariables.set(\"orderNumber\", myGuid);\r",
+									"\r",
+									"var knownMoment = moment().subtract(3, 'days');\r",
+									"var futureMoment = moment().add(2, 'days');\r",
+									"\r",
+									"pm.variables.set(\"knownDate\", knownMoment.format());\r",
+									"pm.variables.set(\"shippingDeadline\", futureMoment.format());\r",
+									"\r",
+									"var packageArray = [\"VK-01\"];\r",
+									"pm.variables.set(\"packageType\", packageArray[Math.floor(Math.random() * packageArray.length)]);\r",
+									"\r",
+									"pm.variables.set(\"priority\", _.random(0, 5));\r",
+									"\r",
+									"var orderLines = [];\r",
+									"\r",
+									"for (var _i = 1; _i <= 15; _i++) {\r",
+									"    var orderLine = {\r",
+									"        line: _i.toString(),\r",
+									"        article: \"4711\",\r",
+									"        quantity: _.random(1,200)\r",
+									"    };\r",
+									"\r",
+									"    orderLines.push(orderLine);\r",
+									"}\r",
+									"\r",
+									"\r",
+									"pm.variables.set(\"orderLines\", JSON.stringify(orderLines));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"knownDate\": \"{{knownDate}}\",\r\n  \"shippingDeadlineDate\": \"{{shippingDeadline}}\",\r\n  \"packageType\": \"{{packageType}}\",\r\n  \"priority\": {{priority}},\r\n  \"carrier\": \"DHL\",\r\n  \"orderType\": \"hallo\",\r\n  \"orderlines\": {{orderLines}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/orders/{{orderNumber}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"orders",
+								"{{orderNumber}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Same Order Not Allowed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"knownDate\": \"2018-03-07T14:21:07+01:00\",\r\n  \"shippingDeadlineDate\": \"2018-03-08T16:30:00+01:00\",\r\n  \"packageType\": \"VK-01\",\r\n  \"priority\": 0,\r\n  \"orderlines\": \r\n  [\r\n    {\r\n      \"line\": \"1\",\r\n      \"article\": \"4711\",\r\n      \"quantity\": 2.000\r\n    },\r\n    {\r\n      \"line\": \"2\",\r\n      \"article\": \"4712\",\r\n      \"quantity\": 3.000\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/orders/{{orderNumber}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"orders",
+								"{{orderNumber}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrlClient}}/orders/{{orderNumber}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"orders",
+								"{{orderNumber}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order Reservations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"orderline\":\r\n  [\r\n    {\r\n      \"orderlineReservations\":\r\n      [\r\n        {\r\n          \"clientReservationID\": \"20210401123141209\",\r\n          \"quantity\": 2.000,\r\n          \"pickLocation\": \"DLR-4-223-1-212\",\r\n          \"releaseDate\": \"2018-03-07T14:21:07\",\r\n          \"reservationDate\": \"2018-03-07T14:21:07\"\r\n        },\r\n        {\r\n          \"clientReservationID\": \"2021040131232210\",\r\n          \"quantity\": 1.000,\r\n          \"pickLocation\": \"K-42-134-313-10\",\r\n          \"releaseDate\": \"2018-03-07T14:21:07\",\r\n          \"reservationDate\": \"2018-03-07T14:21:07\"\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/orders/{{orderNumber}}/orderlines/1",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"orders",
+								"{{orderNumber}}",
+								"orderlines",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Orders for BFT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Idempotency-Key",
+								"value": "{{$guid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/orders?reservationType=BFT&numberOfOrders={{$randomInt}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "reservationType",
+									"value": "BFT"
+								},
+								{
+									"key": "numberOfOrders",
+									"value": "{{$randomInt}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Orders for AKL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Idempotency-Key",
+								"value": "{{$guid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/orders?reservationType=AKL&numberOfOrders={{$randomInt}}&workstationId=AP003",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "reservationType",
+									"value": "AKL"
+								},
+								{
+									"key": "numberOfOrders",
+									"value": "{{$randomInt}}"
+								},
+								{
+									"key": "workstationId",
+									"value": "AP003"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tour",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Idempotency-Key",
+								"value": "{{$guid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/tours?tourTypes=WEISS",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"tours"
+							],
+							"query": [
+								{
+									"key": "tourTypes",
+									"value": "WEISS"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tour Confirmation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"in_progress\",\r\n    \"cartID\": \"037\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/tours/kjsdflkjs",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"tours",
+								"kjsdflkjs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "HandlingUnit Start",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Idempotency-Key",
+								"value": "{{$guid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"box\": \r\n    {\r\n        \"handlingUnitID\": \"LOXXITone144323242\",\r\n        \"startDate\": \"2018-03-07T17:18:02\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/picklists/45689",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"picklists",
+								"45689"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order Priority Change",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"$priority = pm.variables.get(\"priority\");\r",
+									"$orderNumber = pm.collectionVariables.get(\"orderNumber\");\r",
+									"\r",
+									"$url = pm.collectionVariables.get(\"baseUrlClient\");\r",
+									"$url = $url + '/orders/' +  $orderNumber;\r",
+									"\r",
+									"pm.sendRequest({\r",
+									"    url: $url,\r",
+									"    method: 'GET',\r",
+									"    header: {\r",
+									"        ApiKey: 'abc'\r",
+									"    }\r",
+									"}, function (err, response) {\r",
+									"    console.log(response.json());\r",
+									"\r",
+									"    pm.test(\"Priority was set\", () => {\r",
+									"        pm.expect(response.json()).to.have.property('priority', $priority);\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"priority\", _.random(0,5));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Idempotency-Key",
+								"value": "{{$guid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"priority\": {{priority}}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/orders/{{orderNumber}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"orders",
+								"{{orderNumber}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pick data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Idempotency-Key",
+								"value": "{{$guid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"picks\": \r\n    [\r\n        {\r\n            \"clientReservationID\": \"LOXXESS-24322337\",\r\n            \"pickStartDate\": \"2018-03-07T17:18:02.234\",\r\n            \"pickEndDate\": \"2018-03-07T17:18:37.322\",\r\n            \"picked\": 3.000,\r\n            \"pickerID\": \"LX2342\",\r\n            \"handlingUnitID\": \"LE12165498151\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/picklists/456312",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"picklists",
+								"456312"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"priority\", _.random(0,5));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Idempotency-Key",
+								"value": "{{$guid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"priority\": {{priority}}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/orders/{{orderNumber}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"orders",
+								"{{orderNumber}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deleted Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrlClient}}/orders/{{orderNumber}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"orders",
+								"{{orderNumber}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Article",
+			"item": [
+				{
+					"name": "Update Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Updated article data was accepted.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"$articleId = pm.collectionVariables.get(\"defaultArticle\");\r",
+									"\r",
+									"$expectedLength = pm.variables.get(\"length\");\r",
+									"$expectedHeight = pm.variables.get(\"height\");\r",
+									"$expectedWidth = pm.variables.get(\"width\");\r",
+									"$expectedWeight = pm.variables.get(\"weight\");\r",
+									"\r",
+									"$expectedPiecesPerStorageBox = pm.variables.get(\"piecesPerStorageBox\");\r",
+									"$expectedPlannedSalesPerWeek = pm.variables.get(\"plannedSalesPerWeek\");\r",
+									"$expectedMinimumIncomingAmount = pm.variables.get(\"minimumIncomingAmount\");\r",
+									"\r",
+									"$expectedStatus = pm.variables.get(\"status\");\r",
+									"\r",
+									"$clientId = pm.collectionVariables.get(\"clientId\");\r",
+									"\r",
+									"const body = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Article Id is correct\", function () {\r",
+									"     pm.expect(body.articleId).to.eql($articleId.toString());\r",
+									" });\r",
+									" \r",
+									" pm.test(\"clientId is 109\", function () {\r",
+									"     pm.expect(body.clientId).to.eql($clientId.toString());\r",
+									" });\r",
+									"\r",
+									"pm.test(\"Length is correct\", function () {\r",
+									"     pm.expect(body.unit.length).to.eql($expectedLength);\r",
+									" });\r",
+									"\r",
+									" pm.test(\"Height is correct\", function () {\r",
+									"     pm.expect(body.unit.height).to.eql($expectedHeight);\r",
+									" });\r",
+									"\r",
+									" pm.test(\"Width is correct\", function () {\r",
+									"     pm.expect(body.unit.width).to.eql($expectedWidth);\r",
+									" });\r",
+									"\r",
+									" pm.test(\"Weight is correct\", function () {\r",
+									"     pm.expect(body.unit.weight).to.eql($expectedWeight);\r",
+									" });\r",
+									"\r",
+									" pm.test(\"Status is correct\", function () {\r",
+									"     pm.expect(body.status).to.eql($expectedStatus);\r",
+									" });\r",
+									"\r",
+									" pm.test(\"piecesPerStorageBox is correct\", function () {\r",
+									"     pm.expect(body.whArticle.piecesPerStorageBox).to.eql($expectedPiecesPerStorageBox);\r",
+									" });\r",
+									"\r",
+									" pm.test(\"PlannedSalesPerWeek is correct\", function () {\r",
+									"     pm.expect(body.whArticle.plannedSalesPerWeek).to.eql($expectedPlannedSalesPerWeek);\r",
+									" });\r",
+									"\r",
+									"pm.test(\"MinimumIncomingAmount is correct\", function () {\r",
+									"     pm.expect(body.whArticle.minimumIncomingAmount).to.eql($expectedMinimumIncomingAmount);\r",
+									" });\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"length\", _.random(20,500));\r",
+									"pm.variables.set(\"width\", _.random(20,500));\r",
+									"pm.variables.set(\"height\", _.random(20,500));\r",
+									"pm.variables.set(\"weight\", _.random(100,1000));\r",
+									"\r",
+									"pm.variables.set(\"piecesPerStorageBox\", _.random(1,500));\r",
+									"pm.variables.set(\"plannedSalesPerWeek\", _.random(1,200000));\r",
+									"pm.variables.set(\"minimumIncomingAmount\", _.random(1,1000));\r",
+									"\r",
+									"pm.variables.replaceIn('{{$randomDepartment}}');\r",
+									"\r",
+									"var statusArray = [\"active\", \"inactive\"];\r",
+									"pm.variables.set(\"status\", statusArray[Math.floor(Math.random() * statusArray.length)]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"length\": {{length}},\r\n    \"width\": {{width}},\r\n    \"height\": {{height}},\r\n    \"weight\": {{weight}},\r\n    \"piecesPerStorageBox\": {{piecesPerStorageBox}},\r\n    \"category\": \"{{$randomDepartment}}\",\r\n    \"dangerousGoods\": \"1\",\r\n    \"plannedSalesPerWeek\": {{plannedSalesPerWeek}},\r\n    \"minimumIncomingAmount\": {{minimumIncomingAmount}},\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/articles/{{defaultArticle}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"articles",
+								"{{defaultArticle}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Location",
+			"item": [
+				{
+					"name": "Update Stock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Stock was updated.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"stocks\": [\r\n\t{\r\n    \t\t\"article\": \"{{defaultArticle}}\",\r\n    \t\t\"quantity\": 1600.000,\r\n    \t\t\"handlingUnit\": \"L123456789\"\r\n\t}\r\n    ],\r\n    \"status\": \"ok\",\r\n    \"hasApproachingBoxes\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/locations/2374923874/inventory",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"locations",
+								"2374923874",
+								"inventory"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Workstation",
+			"item": [
+				{
+					"name": "AKL Workstation logged in",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"loggedIn\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/workstations/kpaq101",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"workstations",
+								"kpaq101"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AKL Workstation logged out",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"loggedOut\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/workstations/kpaq101",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"workstations",
+								"kpaq101"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Departure Notification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Departure accepted.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"departure\": \"345233\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/workstations/kpaq101",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"workstations",
+								"kpaq101"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Arrival Notification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Arrival accepted.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"arrival\": \"345233\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/workstations/kpaq101",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"workstations",
+								"kpaq101"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Device",
+			"item": [
+				{
+					"name": "Device Update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"on\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/devices/bft024",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"devices",
+								"bft024"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "HealthCheck",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"API is up and running!\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/version",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"version"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "in",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "abc",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "ApiKey",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "server",
+			"value": "10.99.10.120"
+		},
+		{
+			"key": "baseUrl",
+			"value": "http://{{server}}/losrestapi"
+		},
+		{
+			"key": "baseUrlClient",
+			"value": "{{baseUrl}}/clients/109"
+		},
+		{
+			"key": "apiKey",
+			"value": "abc"
+		},
+		{
+			"key": "orderNumber",
+			"value": ""
+		},
+		{
+			"key": "clientId",
+			"value": "109"
+		},
+		{
+			"key": "defaultArticle",
+			"value": "566874"
+		}
+	]
+}
