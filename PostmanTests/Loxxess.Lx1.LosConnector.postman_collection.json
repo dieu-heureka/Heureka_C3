@@ -213,7 +213,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"orderline\":\r\n  [\r\n    {\r\n      \"orderlineReservations\":\r\n      [\r\n        {\r\n          \"clientReservationID\": \"20210401123141209\",\r\n          \"quantity\": 2.000,\r\n          \"pickLocation\": \"DLR-4-223-1-212\",\r\n          \"releaseDate\": \"2018-03-07T14:21:07\",\r\n          \"reservationDate\": \"2018-03-07T14:21:07\"\r\n        },\r\n        {\r\n          \"clientReservationID\": \"2021040131232210\",\r\n          \"quantity\": 1.000,\r\n          \"pickLocation\": \"K-42-134-313-10\",\r\n          \"releaseDate\": \"2018-03-07T14:21:07\",\r\n          \"reservationDate\": \"2018-03-07T14:21:07\"\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}",
+							"raw": "{\r\n  \"orderline\":\r\n  [\r\n    {\r\n      \"orderlineReservations\":\r\n      [\r\n        {\r\n          \"clientReservationId\": \"20210401123141209\",\r\n          \"quantity\": 2.000,\r\n          \"pickLocation\": \"DLR-4-223-1-212\",\r\n          \"releaseDate\": \"2018-03-07T14:21:07\",\r\n          \"reservationDate\": \"2018-03-07T14:21:07\"\r\n        },\r\n        {\r\n          \"clientReservationId\": \"2021040131232210\",\r\n          \"quantity\": 1.000,\r\n          \"pickLocation\": \"K-42-134-313-10\",\r\n          \"releaseDate\": \"2018-03-07T14:21:07\",\r\n          \"reservationDate\": \"2018-03-07T14:21:07\"\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -429,7 +429,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"status\": \"in_progress\",\r\n    \"cartID\": \"037\"\r\n}",
+							"raw": "{\r\n    \"status\": \"in_progress\",\r\n    \"cartId\": \"037\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -475,7 +475,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"box\": \r\n    {\r\n        \"handlingUnitID\": \"LOXXITone144323242\",\r\n        \"startDate\": \"2018-03-07T17:18:02\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"box\": \r\n    {\r\n        \"handlingUnitId\": \"LOXXITone144323242\",\r\n        \"startDate\": \"2018-03-07T17:18:02\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -534,7 +534,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"pm.variables.set(\"priority\", _.random(0,5));"
+									"pm.variables.set(\"priority\", _.random(0, 5));"
 								],
 								"type": "text/javascript"
 							}
@@ -608,7 +608,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"picks\": \r\n    [\r\n        {\r\n            \"clientReservationID\": \"LOXXESS-24322337\",\r\n            \"pickStartDate\": \"2018-03-07T17:18:02.234\",\r\n            \"pickEndDate\": \"2018-03-07T17:18:37.322\",\r\n            \"picked\": 3.000,\r\n            \"pickerID\": \"LX2342\",\r\n            \"handlingUnitID\": \"LE12165498151\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"picks\": \r\n    [\r\n        {\r\n            \"clientReservationId\": \"LOXXESS-24322337\",\r\n            \"pickStartDate\": \"2018-03-07T17:18:02.234\",\r\n            \"pickEndDate\": \"2018-03-07T17:18:37.322\",\r\n            \"picked\": 3.000,\r\n            \"pickerId\": \"LX2342\",\r\n            \"handlingUnitId\": \"LE12165498151\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -891,14 +891,18 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlClient}}/locations/2374923874/inventory",
+							"raw": "{{baseUrlClient}}/locations?locationid=DLR0201-1-002-1-007",
 							"host": [
 								"{{baseUrlClient}}"
 							],
 							"path": [
-								"locations",
-								"2374923874",
-								"inventory"
+								"locations"
+							],
+							"query": [
+								{
+									"key": "locationid",
+									"value": "DLR0201-1-002-1-007"
+								}
 							]
 						}
 					},
