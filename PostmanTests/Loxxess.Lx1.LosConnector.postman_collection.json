@@ -1,10 +1,235 @@
 {
 	"info": {
-		"_postman_id": "ac6956a2-01bd-4c54-b6bc-f55bbafbe9a3",
+		"_postman_id": "a6b35002-048d-4c78-8a39-85ddb1a7a41f",
 		"name": "Loxxess.Lx1.LosConnector",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
+		{
+			"name": "Article",
+			"item": [
+				{
+					"name": "Create Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Article was created\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"$articleId = pm.variables.get(\"articleId\");\r",
+									"\r",
+									"$expectedLength = pm.variables.get(\"length\");\r",
+									"$expectedHeight = pm.variables.get(\"height\");\r",
+									"$expectedWidth = pm.variables.get(\"width\");\r",
+									"$expectedWeight = pm.variables.get(\"weight\");\r",
+									"$expectedPiecesPerStorageBox = pm.variables.get(\"piecesPerStorageBox\");\r",
+									"$expectedPlannedSalesPerWeek = pm.variables.get(\"plannedSalesPerWeek\");\r",
+									"$expectedMinimumIncomingAmount = pm.variables.get(\"minimumIncomingAmount\");\r",
+									"$expectedStatus = pm.variables.get(\"status\");\r",
+									"$expectedCategory = pm.variables.get(\"category\");\r",
+									"\r",
+									"$expectedClientId = pm.collectionVariables.get(\"clientId\");\r",
+									"\r",
+									"const body = pm.response.json();\r",
+									"\r",
+									"pm.test(\"articleId is correct\", function () {\r",
+									"    pm.expect(body.articleId).to.eql($articleId.toString());\r",
+									"});\r",
+									" \r",
+									"pm.test(\"clientId is correct\", function () {\r",
+									"    pm.expect(body.clientId).to.eql($expectedClientId.toString());\r",
+									"});\r",
+									" \r",
+									"pm.test(\"category is correct\", function () {\r",
+									"    pm.expect(body.category).to.eql($expectedCategory);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"riskClass is correct\", function () {\r",
+									"    pm.expect(body.riskClass).to.eql(\"1\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"dangerousGoods is correct\", function () {\r",
+									"    pm.expect(body.dangerousGoods).to.eql(true);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"bulkGoods is correct\", function () {\r",
+									"    pm.expect(body.bulkGoods).to.eql(false);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"status is correct\", function () {\r",
+									"    pm.expect(body.status).to.eql($expectedStatus);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"unit default is PCS\", function () {\r",
+									"    pm.expect(body.unit.unit).to.eql(\"PCS\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"length is correct\", function () {\r",
+									"    pm.expect(body.unit.length).to.eql($expectedLength);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"height is correct\", function () {\r",
+									"    pm.expect(body.unit.height).to.eql($expectedHeight);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"width is correct\", function () {\r",
+									"    pm.expect(body.unit.width).to.eql($expectedWidth);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"weight is correct\", function () {\r",
+									"    pm.expect(body.unit.weight).to.eql($expectedWeight);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"piecesPerStorageBox is correct\", function () {\r",
+									"    pm.expect(body.whArticle.piecesPerStorageBox).to.eql($expectedPiecesPerStorageBox);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"plannedSalesPerWeek is correct\", function () {\r",
+									"    pm.expect(body.whArticle.plannedSalesPerWeek).to.eql($expectedPlannedSalesPerWeek);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"minimumIncomingAmount is correct\", function () {\r",
+									"    pm.expect(body.whArticle.minimumIncomingAmount).to.eql($expectedMinimumIncomingAmount);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uuid = require('uuid');\r",
+									"var articleId = uuid.v4();\r",
+									"\r",
+									"pm.collectionVariables.set(\"ARTILE_ID\", articleId);\r",
+									"\r",
+									"pm.variables.set(\"articleId\", articleId);\r",
+									"pm.variables.set(\"length\", _.random(20,500));\r",
+									"pm.variables.set(\"width\", _.random(20,500));\r",
+									"pm.variables.set(\"height\", _.random(20,500));\r",
+									"pm.variables.set(\"weight\", _.random(100,1000));\r",
+									"pm.variables.set(\"piecesPerStorageBox\", _.random(1,500));\r",
+									"pm.variables.set(\"plannedSalesPerWeek\", _.random(1,200000));\r",
+									"pm.variables.set(\"minimumIncomingAmount\", _.random(1,1000));\r",
+									"\r",
+									"var categories = [\"Lebensmittel\", \"Tiernahrung\", \"Kitex\"];\r",
+									"pm.variables.set(\"category\", categories[Math.floor(Math.random() * categories.length)]);\r",
+									"\r",
+									"var statuses = [\"active\", \"inactive\"];\r",
+									"pm.variables.set(\"status\", statuses[Math.floor(Math.random() * statuses.length)]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"length\": {{length}},\r\n    \"width\": {{width}},\r\n    \"height\": {{height}},\r\n    \"weight\": {{weight}},\r\n    \"piecesPerStorageBox\": {{piecesPerStorageBox}},\r\n    \"category\": \"{{category}}\",\r\n    \"dangerousGoods\": \"1\",\r\n    \"plannedSalesPerWeek\": {{plannedSalesPerWeek}},\r\n    \"minimumIncomingAmount\": {{minimumIncomingAmount}},\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/articles?articleId={{articleId}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"articles"
+							],
+							"query": [
+								{
+									"key": "articleId",
+									"value": "{{articleId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Article - Error - Invalid Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Category does not exist\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Category zzzyyyccc does not exist\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uuid = require('uuid');\r",
+									"var articleId = uuid.v4();\r",
+									"\r",
+									"pm.variables.set(\"articleId\", articleId);\r",
+									"pm.variables.set(\"length\", _.random(20,500));\r",
+									"pm.variables.set(\"width\", _.random(20,500));\r",
+									"pm.variables.set(\"height\", _.random(20,500));\r",
+									"pm.variables.set(\"weight\", _.random(100,1000));\r",
+									"pm.variables.set(\"piecesPerStorageBox\", _.random(1,500));\r",
+									"pm.variables.set(\"plannedSalesPerWeek\", _.random(1,200000));\r",
+									"pm.variables.set(\"minimumIncomingAmount\", _.random(1,1000));\r",
+									"pm.variables.set(\"category\", \"zzzyyyccc\");\r",
+									"\r",
+									"var statuses = [\"active\", \"inactive\"];\r",
+									"pm.variables.set(\"status\", statuses[Math.floor(Math.random() * statuses.length)]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"length\": {{length}},\r\n    \"width\": {{width}},\r\n    \"height\": {{height}},\r\n    \"weight\": {{weight}},\r\n    \"piecesPerStorageBox\": {{piecesPerStorageBox}},\r\n    \"category\": \"{{category}}\",\r\n    \"dangerousGoods\": \"1\",\r\n    \"plannedSalesPerWeek\": {{plannedSalesPerWeek}},\r\n    \"minimumIncomingAmount\": {{minimumIncomingAmount}},\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/articles?articleId={{articleId}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"articles"
+							],
+							"query": [
+								{
+									"key": "articleId",
+									"value": "{{articleId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "Order",
 			"item": [
@@ -17,15 +242,16 @@
 								"exec": [
 									"var moment = require('moment');\r",
 									"\r",
-									"\r",
 									"pm.test(\"Status code is 201\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"\r",
 									"$clientId = pm.collectionVariables.get(\"clientId\");\r",
-									"$orderId = pm.collectionVariables.get(\"orderNumber\");\r",
+									"\r",
+									"$orderId = pm.variables.get(\"orderNumber\");\r",
 									"$knownDate = pm.variables.get(\"knownDate\");\r",
-									"$shippingDeadline = pm.variables.get(\"shippingDeadline\");\r",
+									"$loadingDeadlineDate = pm.variables.get(\"loadingDeadlineDate\");\r",
+									"console.log($orderId);\r",
 									"\r",
 									"const body = pm.response.json();\r",
 									"\r",
@@ -43,8 +269,8 @@
 									"    pm.expect($isSame).to.be.true;\r",
 									"});\r",
 									"\r",
-									"pm.test(\"shippingDeadline is correct\", function () {\r",
-									"    var $isSame = moment(body.shippingDeadlineDate).isSame($shippingDeadline);\r",
+									"pm.test(\"loadingDeadlineDate is correct\", function () {\r",
+									"    var $isSame = moment(body.loadingDeadlineDate).isSame($loadingDeadlineDate);\r",
 									"\r",
 									"    pm.expect($isSame).to.be.true;\r",
 									"});\r",
@@ -63,18 +289,22 @@
 									"var moment = require('moment');\r",
 									"\r",
 									"var uuid = require('uuid');\r",
-									"var myGuid = uuid.v4();\r",
+									"var orderId = uuid.v4();\r",
 									"\r",
-									"pm.collectionVariables.set(\"orderNumber\", myGuid);\r",
+									"pm.collectionVariables.set(\"ORDER_ID\", orderId);\r",
 									"\r",
 									"var knownMoment = moment().subtract(3, 'days');\r",
 									"var futureMoment = moment().add(2, 'days');\r",
 									"\r",
+									"pm.variables.set(\"orderNumber\", orderId);\r",
 									"pm.variables.set(\"knownDate\", knownMoment.format());\r",
-									"pm.variables.set(\"shippingDeadline\", futureMoment.format());\r",
+									"pm.variables.set(\"loadingDeadlineDate\", futureMoment.format());\r",
 									"\r",
-									"var packageArray = [\"VK-01\"];\r",
-									"pm.variables.set(\"packageType\", packageArray[Math.floor(Math.random() * packageArray.length)]);\r",
+									"var packages = [\"dm146\", \"dm125\", \"dm104\"];\r",
+									"pm.variables.set(\"packageType\", packages[Math.floor(Math.random() * packages.length)]);\r",
+									"\r",
+									"var orderTypes = [\"YNOH\", \"YUMX\", \"RBLV\"];\r",
+									"pm.variables.set(\"orderType\", orderTypes[Math.floor(Math.random() * orderTypes.length)]);\r",
 									"\r",
 									"pm.variables.set(\"priority\", _.random(0, 5));\r",
 									"\r",
@@ -83,13 +313,12 @@
 									"for (var _i = 1; _i <= 15; _i++) {\r",
 									"    var orderLine = {\r",
 									"        line: _i.toString(),\r",
-									"        article: \"4711\",\r",
+									"        article: \"{{ARTILE_ID}}\",\r",
 									"        quantity: _.random(1,200)\r",
 									"    };\r",
 									"\r",
 									"    orderLines.push(orderLine);\r",
 									"}\r",
-									"\r",
 									"\r",
 									"pm.variables.set(\"orderLines\", JSON.stringify(orderLines));"
 								],
@@ -98,11 +327,11 @@
 						}
 					],
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"knownDate\": \"{{knownDate}}\",\r\n  \"shippingDeadlineDate\": \"{{shippingDeadline}}\",\r\n  \"packageType\": \"{{packageType}}\",\r\n  \"priority\": {{priority}},\r\n  \"carrier\": \"DHL\",\r\n  \"orderType\": \"hallo\",\r\n  \"orderlines\": {{orderLines}}\r\n}",
+							"raw": "{\r\n  \"knownDate\": \"{{knownDate}}\",\r\n  \"loadingDeadlineDate\": \"{{loadingDeadlineDate}}\",\r\n  \"packageType\": \"{{packageType}}\",\r\n  \"priority\": {{priority}},\r\n  \"carrier\": \"DHL\",\r\n  \"orderType\": \"{{orderType}}\",\r\n  \"orderlines\": {{orderLines}},\r\n  \"maxPackageWeight\": 10\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -110,13 +339,370 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlClient}}/orders/{{orderNumber}}",
+							"raw": "{{baseUrlClient}}/orders?orderId={{orderNumber}}",
 							"host": [
 								"{{baseUrlClient}}"
 							],
 							"path": [
-								"orders",
-								"{{orderNumber}}"
+								"orders"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "{{orderNumber}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Order - Error - Invalid maxPackageWeight",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment');\r",
+									"\r",
+									"var uuid = require('uuid');\r",
+									"var orderId = uuid.v4();\r",
+									"\r",
+									"var knownMoment = moment().subtract(3, 'days');\r",
+									"var futureMoment = moment().add(2, 'days');\r",
+									"\r",
+									"pm.variables.set(\"orderNumber\", orderId);\r",
+									"pm.variables.set(\"knownDate\", knownMoment.format());\r",
+									"pm.variables.set(\"loadingDeadlineDate\", futureMoment.format());\r",
+									"\r",
+									"var packages = [\"dm146\", \"dm125\", \"dm104\"];\r",
+									"pm.variables.set(\"packageType\", packages[Math.floor(Math.random() * packages.length)]);\r",
+									"\r",
+									"var orderTypes = [\"YNOH\", \"YUMX\", \"RBLV\"];\r",
+									"pm.variables.set(\"orderType\", orderTypes[Math.floor(Math.random() * orderTypes.length)]);\r",
+									"\r",
+									"pm.variables.set(\"priority\", _.random(0, 5));\r",
+									"\r",
+									"var orderLines = [];\r",
+									"\r",
+									"for (var _i = 1; _i <= 15; _i++) {\r",
+									"    var orderLine = {\r",
+									"        line: _i.toString(),\r",
+									"        article: \"{{ARTILE_ID}}\",\r",
+									"        quantity: _.random(1,200)\r",
+									"    };\r",
+									"\r",
+									"    orderLines.push(orderLine);\r",
+									"}\r",
+									"\r",
+									"pm.variables.set(\"orderLines\", JSON.stringify(orderLines));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"knownDate\": \"{{knownDate}}\",\r\n  \"loadingDeadlineDate\": \"{{loadingDeadlineDate}}\",\r\n  \"packageType\": \"{{packageType}}\",\r\n  \"priority\": {{priority}},\r\n  \"carrier\": \"DHL\",\r\n  \"orderType\": \"{{orderType}}\",\r\n  \"orderlines\": {{orderLines}},\r\n  \"maxPackageWeight\": -10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/orders?orderId={{orderNumber}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "{{orderNumber}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Order - Error - Invalid Order Type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Order type does not exist\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Order type xxxyyyzzz does not exist\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment');\r",
+									"\r",
+									"var uuid = require('uuid');\r",
+									"var orderId = uuid.v4();\r",
+									"\r",
+									"var knownMoment = moment().subtract(3, 'days');\r",
+									"var futureMoment = moment().add(2, 'days');\r",
+									"\r",
+									"pm.variables.set(\"orderNumber\", orderId);\r",
+									"pm.variables.set(\"knownDate\", knownMoment.format());\r",
+									"pm.variables.set(\"loadingDeadlineDate\", futureMoment.format());\r",
+									"\r",
+									"var packages = [\"dm146\", \"dm125\", \"dm104\"];\r",
+									"pm.variables.set(\"packageType\", packages[Math.floor(Math.random() * packages.length)]);\r",
+									"\r",
+									"pm.variables.set(\"orderType\", \"xxxyyyzzz\");\r",
+									"\r",
+									"pm.variables.set(\"priority\", _.random(0, 5));\r",
+									"\r",
+									"var orderLines = [];\r",
+									"\r",
+									"for (var _i = 1; _i <= 15; _i++) {\r",
+									"    var orderLine = {\r",
+									"        line: _i.toString(),\r",
+									"        article: \"{{ARTILE_ID}}\",\r",
+									"        quantity: _.random(1,200)\r",
+									"    };\r",
+									"\r",
+									"    orderLines.push(orderLine);\r",
+									"}\r",
+									"\r",
+									"pm.variables.set(\"orderLines\", JSON.stringify(orderLines));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"knownDate\": \"{{knownDate}}\",\r\n  \"loadingDeadlineDate\": \"{{loadingDeadlineDate}}\",\r\n  \"packageType\": \"{{packageType}}\",\r\n  \"priority\": {{priority}},\r\n  \"carrier\": \"DHL\",\r\n  \"orderType\": \"{{orderType}}\",\r\n  \"orderlines\": {{orderLines}},\r\n  \"maxPackageWeight\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/orders?orderId={{orderNumber}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "{{orderNumber}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Order - Error - Invalid Carrier",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Carrier does not exist\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Carrier ABCDEF does not exist\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment');\r",
+									"\r",
+									"var uuid = require('uuid');\r",
+									"var orderId = uuid.v4();\r",
+									"\r",
+									"var knownMoment = moment().subtract(3, 'days');\r",
+									"var futureMoment = moment().add(2, 'days');\r",
+									"\r",
+									"pm.variables.set(\"orderNumber\", orderId);\r",
+									"pm.variables.set(\"knownDate\", knownMoment.format());\r",
+									"pm.variables.set(\"loadingDeadlineDate\", futureMoment.format());\r",
+									"\r",
+									"var packages = [\"dm146\", \"dm125\", \"dm104\"];\r",
+									"pm.variables.set(\"packageType\", packages[Math.floor(Math.random() * packages.length)]);\r",
+									"\r",
+									"var orderTypes = [\"YNOH\", \"YUMX\", \"RBLV\"];\r",
+									"pm.variables.set(\"orderType\", orderTypes[Math.floor(Math.random() * orderTypes.length)]);\r",
+									"\r",
+									"pm.variables.set(\"priority\", _.random(0, 5));\r",
+									"\r",
+									"var orderLines = [];\r",
+									"\r",
+									"for (var _i = 1; _i <= 15; _i++) {\r",
+									"    var orderLine = {\r",
+									"        line: _i.toString(),\r",
+									"        article: \"{{ARTILE_ID}}\",\r",
+									"        quantity: _.random(1,200)\r",
+									"    };\r",
+									"\r",
+									"    orderLines.push(orderLine);\r",
+									"}\r",
+									"\r",
+									"pm.variables.set(\"orderLines\", JSON.stringify(orderLines));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"knownDate\": \"{{knownDate}}\",\r\n  \"loadingDeadlineDate\": \"{{loadingDeadlineDate}}\",\r\n  \"packageType\": \"{{packageType}}\",\r\n  \"priority\": {{priority}},\r\n  \"carrier\": \"ABCDEF\",\r\n  \"orderType\": \"{{orderType}}\",\r\n  \"orderlines\": {{orderLines}},\r\n  \"maxPackageWeight\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/orders?orderId={{orderNumber}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "{{orderNumber}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Order - Error - Invalid Package Type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Package type does not exist\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Package type abcdef does not exist\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment');\r",
+									"\r",
+									"var uuid = require('uuid');\r",
+									"var orderId = uuid.v4();\r",
+									"\r",
+									"var knownMoment = moment().subtract(3, 'days');\r",
+									"var futureMoment = moment().add(2, 'days');\r",
+									"\r",
+									"pm.variables.set(\"orderNumber\", orderId);\r",
+									"pm.variables.set(\"knownDate\", knownMoment.format());\r",
+									"pm.variables.set(\"loadingDeadlineDate\", futureMoment.format());\r",
+									"\r",
+									"pm.variables.set(\"packageType\", \"abcdef\");\r",
+									"\r",
+									"var orderTypes = [\"YNOH\", \"YUMX\", \"RBLV\"];\r",
+									"pm.variables.set(\"orderType\", orderTypes[Math.floor(Math.random() * orderTypes.length)]);\r",
+									"\r",
+									"pm.variables.set(\"priority\", _.random(0, 5));\r",
+									"\r",
+									"var orderLines = [];\r",
+									"\r",
+									"for (var _i = 1; _i <= 15; _i++) {\r",
+									"    var orderLine = {\r",
+									"        line: _i.toString(),\r",
+									"        article: \"{{ARTILE_ID}}\",\r",
+									"        quantity: _.random(1,200)\r",
+									"    };\r",
+									"\r",
+									"    orderLines.push(orderLine);\r",
+									"}\r",
+									"\r",
+									"pm.variables.set(\"orderLines\", JSON.stringify(orderLines));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"knownDate\": \"{{knownDate}}\",\r\n  \"loadingDeadlineDate\": \"{{loadingDeadlineDate}}\",\r\n  \"packageType\": \"{{packageType}}\",\r\n  \"priority\": {{priority}},\r\n  \"carrier\": \"DHL\",\r\n  \"orderType\": \"{{orderType}}\",\r\n  \"orderlines\": {{orderLines}},\r\n  \"maxPackageWeight\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/orders?orderId={{orderNumber}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "{{orderNumber}}"
+								}
 							]
 						}
 					},
@@ -737,130 +1323,6 @@
 			]
 		},
 		{
-			"name": "Article",
-			"item": [
-				{
-					"name": "Update Article",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Updated article data was accepted.\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"$articleId = pm.collectionVariables.get(\"defaultArticle\");\r",
-									"\r",
-									"$expectedLength = pm.variables.get(\"length\");\r",
-									"$expectedHeight = pm.variables.get(\"height\");\r",
-									"$expectedWidth = pm.variables.get(\"width\");\r",
-									"$expectedWeight = pm.variables.get(\"weight\");\r",
-									"\r",
-									"$expectedPiecesPerStorageBox = pm.variables.get(\"piecesPerStorageBox\");\r",
-									"$expectedPlannedSalesPerWeek = pm.variables.get(\"plannedSalesPerWeek\");\r",
-									"$expectedMinimumIncomingAmount = pm.variables.get(\"minimumIncomingAmount\");\r",
-									"\r",
-									"$expectedStatus = pm.variables.get(\"status\");\r",
-									"\r",
-									"$clientId = pm.collectionVariables.get(\"clientId\");\r",
-									"\r",
-									"const body = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Article Id is correct\", function () {\r",
-									"     pm.expect(body.articleId).to.eql($articleId.toString());\r",
-									" });\r",
-									" \r",
-									" pm.test(\"clientId is 109\", function () {\r",
-									"     pm.expect(body.clientId).to.eql($clientId.toString());\r",
-									" });\r",
-									"\r",
-									"pm.test(\"Length is correct\", function () {\r",
-									"     pm.expect(body.unit.length).to.eql($expectedLength);\r",
-									" });\r",
-									"\r",
-									" pm.test(\"Height is correct\", function () {\r",
-									"     pm.expect(body.unit.height).to.eql($expectedHeight);\r",
-									" });\r",
-									"\r",
-									" pm.test(\"Width is correct\", function () {\r",
-									"     pm.expect(body.unit.width).to.eql($expectedWidth);\r",
-									" });\r",
-									"\r",
-									" pm.test(\"Weight is correct\", function () {\r",
-									"     pm.expect(body.unit.weight).to.eql($expectedWeight);\r",
-									" });\r",
-									"\r",
-									" pm.test(\"Status is correct\", function () {\r",
-									"     pm.expect(body.status).to.eql($expectedStatus);\r",
-									" });\r",
-									"\r",
-									" pm.test(\"piecesPerStorageBox is correct\", function () {\r",
-									"     pm.expect(body.whArticle.piecesPerStorageBox).to.eql($expectedPiecesPerStorageBox);\r",
-									" });\r",
-									"\r",
-									" pm.test(\"PlannedSalesPerWeek is correct\", function () {\r",
-									"     pm.expect(body.whArticle.plannedSalesPerWeek).to.eql($expectedPlannedSalesPerWeek);\r",
-									" });\r",
-									"\r",
-									"pm.test(\"MinimumIncomingAmount is correct\", function () {\r",
-									"     pm.expect(body.whArticle.minimumIncomingAmount).to.eql($expectedMinimumIncomingAmount);\r",
-									" });\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									"pm.variables.set(\"length\", _.random(20,500));\r",
-									"pm.variables.set(\"width\", _.random(20,500));\r",
-									"pm.variables.set(\"height\", _.random(20,500));\r",
-									"pm.variables.set(\"weight\", _.random(100,1000));\r",
-									"\r",
-									"pm.variables.set(\"piecesPerStorageBox\", _.random(1,500));\r",
-									"pm.variables.set(\"plannedSalesPerWeek\", _.random(1,200000));\r",
-									"pm.variables.set(\"minimumIncomingAmount\", _.random(1,1000));\r",
-									"\r",
-									"pm.variables.replaceIn('{{$randomDepartment}}');\r",
-									"\r",
-									"var statusArray = [\"active\", \"inactive\"];\r",
-									"pm.variables.set(\"status\", statusArray[Math.floor(Math.random() * statusArray.length)]);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"length\": {{length}},\r\n    \"width\": {{width}},\r\n    \"height\": {{height}},\r\n    \"weight\": {{weight}},\r\n    \"piecesPerStorageBox\": {{piecesPerStorageBox}},\r\n    \"category\": \"{{$randomDepartment}}\",\r\n    \"dangerousGoods\": \"1\",\r\n    \"plannedSalesPerWeek\": {{plannedSalesPerWeek}},\r\n    \"minimumIncomingAmount\": {{minimumIncomingAmount}},\r\n    \"status\": \"{{status}}\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrlClient}}/articles/{{defaultArticle}}",
-							"host": [
-								"{{baseUrlClient}}"
-							],
-							"path": [
-								"articles",
-								"{{defaultArticle}}"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Location",
 			"item": [
 				{
@@ -1181,7 +1643,7 @@
 	"variable": [
 		{
 			"key": "server",
-			"value": "10.99.10.120"
+			"value": "localhost:9090"
 		},
 		{
 			"key": "baseUrl",
@@ -1196,16 +1658,16 @@
 			"value": "abc"
 		},
 		{
-			"key": "orderNumber",
-			"value": ""
-		},
-		{
 			"key": "clientId",
 			"value": "109"
 		},
 		{
-			"key": "defaultArticle",
-			"value": "566874"
+			"key": "ARTILE_ID",
+			"value": ""
+		},
+		{
+			"key": "ORDER_ID",
+			"value": ""
 		}
 	]
 }
