@@ -1801,7 +1801,7 @@
 	"variable": [
 		{
 			"key": "server",
-			"value": "localhost:9090"
+			"value": "10.99.10.120"
 		},
 		{
 			"key": "baseUrl",
