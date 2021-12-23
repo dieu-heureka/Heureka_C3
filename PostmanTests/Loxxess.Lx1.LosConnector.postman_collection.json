@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a6b35002-048d-4c78-8a39-85ddb1a7a41f",
+		"_postman_id": "58529586-c139-4ecd-afd0-10faedc8d12b",
 		"name": "Loxxess.Lx1.LosConnector",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -159,6 +159,514 @@
 					"response": []
 				},
 				{
+					"name": "Update Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Article was created\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"$articleId = pm.collectionVariables.get(\"ARTILE_ID\");\r",
+									"\r",
+									"const body = pm.response.json();\r",
+									"\r",
+									"pm.test(\"articleId is correct\", function () {\r",
+									"    pm.expect(body.articleId).to.eql($articleId.toString());\r",
+									"});\r",
+									" \r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"length\", _.random(20,500));\r",
+									"pm.variables.set(\"width\", _.random(20,500));\r",
+									"pm.variables.set(\"height\", _.random(20,500));\r",
+									"pm.variables.set(\"weight\", _.random(100,1000));\r",
+									"pm.variables.set(\"piecesPerStorageBox\", _.random(1,500));\r",
+									"pm.variables.set(\"plannedSalesPerWeek\", _.random(1,200000));\r",
+									"pm.variables.set(\"minimumIncomingAmount\", _.random(1,1000));\r",
+									"\r",
+									"var categories = [\"Lebensmittel\", \"Tiernahrung\", \"Kitex\"];\r",
+									"pm.variables.set(\"category\", categories[Math.floor(Math.random() * categories.length)]);\r",
+									"\r",
+									"var statuses = [\"active\", \"inactive\"];\r",
+									"pm.variables.set(\"status\", statuses[Math.floor(Math.random() * statuses.length)]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"length\": {{length}},\r\n    \"width\": {{width}},\r\n    \"height\": {{height}},\r\n    \"weight\": {{weight}},\r\n    \"piecesPerStorageBox\": {{piecesPerStorageBox}},\r\n    \"category\": \"{{category}}\",\r\n    \"dangerousGoods\": \"1\",\r\n    \"plannedSalesPerWeek\": {{plannedSalesPerWeek}},\r\n    \"minimumIncomingAmount\": {{minimumIncomingAmount}},\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/articles?articleId={{ARTILE_ID}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"articles"
+							],
+							"query": [
+								{
+									"key": "articleId",
+									"value": "{{ARTILE_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Article - Error - Empty Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Error 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(pm.response.json().body[0]).to.eql(\"status must not be empty\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uuid = require('uuid');\r",
+									"var articleId = uuid.v4();\r",
+									"\r",
+									"pm.variables.set(\"articleId\", articleId);\r",
+									"pm.variables.set(\"length\", _.random(20,500));\r",
+									"pm.variables.set(\"width\", _.random(20,500));\r",
+									"pm.variables.set(\"height\", _.random(20,500));\r",
+									"pm.variables.set(\"weight\", _.random(100,1000));\r",
+									"pm.variables.set(\"piecesPerStorageBox\", _.random(1,500));\r",
+									"pm.variables.set(\"plannedSalesPerWeek\", _.random(1,200000));\r",
+									"pm.variables.set(\"minimumIncomingAmount\", _.random(1,1000));\r",
+									"\r",
+									"var categories = [\"Lebensmittel\", \"Tiernahrung\", \"Kitex\"];\r",
+									"pm.variables.set(\"category\", categories[Math.floor(Math.random() * categories.length)]);\r",
+									"\r",
+									"var statuses = [\"active\", \"inactive\"];\r",
+									"pm.variables.set(\"status\", statuses[Math.floor(Math.random() * statuses.length)]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"length\": {{length}},\r\n    \"width\": {{width}},\r\n    \"height\": {{height}},\r\n    \"weight\": {{weight}},\r\n    \"piecesPerStorageBox\": {{piecesPerStorageBox}},\r\n    \"category\": \"{{category}}\",\r\n    \"dangerousGoods\": \"1\",\r\n    \"plannedSalesPerWeek\": {{plannedSalesPerWeek}},\r\n    \"minimumIncomingAmount\": {{minimumIncomingAmount}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/articles?articleId={{articleId}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"articles"
+							],
+							"query": [
+								{
+									"key": "articleId",
+									"value": "{{articleId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Article - Error - Empty Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Error 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(pm.response.json().body[0]).to.eql(\"category must not be empty\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uuid = require('uuid');\r",
+									"var articleId = uuid.v4();\r",
+									"\r",
+									"pm.variables.set(\"articleId\", articleId);\r",
+									"pm.variables.set(\"length\", _.random(20,500));\r",
+									"pm.variables.set(\"width\", _.random(20,500));\r",
+									"pm.variables.set(\"height\", _.random(20,500));\r",
+									"pm.variables.set(\"weight\", _.random(100,1000));\r",
+									"pm.variables.set(\"piecesPerStorageBox\", _.random(1,500));\r",
+									"pm.variables.set(\"plannedSalesPerWeek\", _.random(1,200000));\r",
+									"pm.variables.set(\"minimumIncomingAmount\", _.random(1,1000));\r",
+									"\r",
+									"var categories = [\"Lebensmittel\", \"Tiernahrung\", \"Kitex\"];\r",
+									"pm.variables.set(\"category\", categories[Math.floor(Math.random() * categories.length)]);\r",
+									"\r",
+									"var statuses = [\"active\", \"inactive\"];\r",
+									"pm.variables.set(\"status\", statuses[Math.floor(Math.random() * statuses.length)]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"length\": {{length}},\r\n    \"width\": {{width}},\r\n    \"height\": {{height}},\r\n    \"weight\": {{weight}},\r\n    \"piecesPerStorageBox\": {{piecesPerStorageBox}},\r\n    \"dangerousGoods\": \"1\",\r\n    \"plannedSalesPerWeek\": {{plannedSalesPerWeek}},\r\n    \"minimumIncomingAmount\": {{minimumIncomingAmount}},\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/articles?articleId={{articleId}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"articles"
+							],
+							"query": [
+								{
+									"key": "articleId",
+									"value": "{{articleId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Article - Error - Empty Weight",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Error 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(pm.response.json().body[0]).to.eql(\"weight must not be null\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uuid = require('uuid');\r",
+									"var articleId = uuid.v4();\r",
+									"\r",
+									"pm.variables.set(\"articleId\", articleId);\r",
+									"pm.variables.set(\"length\", _.random(20,500));\r",
+									"pm.variables.set(\"width\", _.random(20,500));\r",
+									"pm.variables.set(\"height\", _.random(20,500));\r",
+									"pm.variables.set(\"weight\", _.random(100,1000));\r",
+									"pm.variables.set(\"piecesPerStorageBox\", _.random(1,500));\r",
+									"pm.variables.set(\"plannedSalesPerWeek\", _.random(1,200000));\r",
+									"pm.variables.set(\"minimumIncomingAmount\", _.random(1,1000));\r",
+									"\r",
+									"var categories = [\"Lebensmittel\", \"Tiernahrung\", \"Kitex\"];\r",
+									"pm.variables.set(\"category\", categories[Math.floor(Math.random() * categories.length)]);\r",
+									"\r",
+									"var statuses = [\"active\", \"inactive\"];\r",
+									"pm.variables.set(\"status\", statuses[Math.floor(Math.random() * statuses.length)]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"length\": {{length}},\r\n    \"width\": {{width}},\r\n    \"height\": {{height}},\r\n    \"piecesPerStorageBox\": {{piecesPerStorageBox}},\r\n    \"category\": \"{{category}}\",\r\n    \"dangerousGoods\": \"1\",\r\n    \"plannedSalesPerWeek\": {{plannedSalesPerWeek}},\r\n    \"minimumIncomingAmount\": {{minimumIncomingAmount}},\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/articles?articleId={{articleId}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"articles"
+							],
+							"query": [
+								{
+									"key": "articleId",
+									"value": "{{articleId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Article - Error - Empty Height",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Error 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(pm.response.json().body[0]).to.eql(\"height must not be null\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uuid = require('uuid');\r",
+									"var articleId = uuid.v4();\r",
+									"\r",
+									"pm.variables.set(\"articleId\", articleId);\r",
+									"pm.variables.set(\"length\", _.random(20,500));\r",
+									"pm.variables.set(\"width\", _.random(20,500));\r",
+									"pm.variables.set(\"height\", _.random(20,500));\r",
+									"pm.variables.set(\"weight\", _.random(100,1000));\r",
+									"pm.variables.set(\"piecesPerStorageBox\", _.random(1,500));\r",
+									"pm.variables.set(\"plannedSalesPerWeek\", _.random(1,200000));\r",
+									"pm.variables.set(\"minimumIncomingAmount\", _.random(1,1000));\r",
+									"\r",
+									"var categories = [\"Lebensmittel\", \"Tiernahrung\", \"Kitex\"];\r",
+									"pm.variables.set(\"category\", categories[Math.floor(Math.random() * categories.length)]);\r",
+									"\r",
+									"var statuses = [\"active\", \"inactive\"];\r",
+									"pm.variables.set(\"status\", statuses[Math.floor(Math.random() * statuses.length)]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"length\": {{length}},\r\n    \"width\": {{width}},\r\n    \"weight\": {{weight}},\r\n    \"piecesPerStorageBox\": {{piecesPerStorageBox}},\r\n    \"category\": \"{{category}}\",\r\n    \"dangerousGoods\": \"1\",\r\n    \"plannedSalesPerWeek\": {{plannedSalesPerWeek}},\r\n    \"minimumIncomingAmount\": {{minimumIncomingAmount}},\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/articles?articleId={{articleId}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"articles"
+							],
+							"query": [
+								{
+									"key": "articleId",
+									"value": "{{articleId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Article - Error - Empty Width",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Error 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(pm.response.json().body[0]).to.eql(\"width must not be null\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uuid = require('uuid');\r",
+									"var articleId = uuid.v4();\r",
+									"\r",
+									"pm.variables.set(\"articleId\", articleId);\r",
+									"pm.variables.set(\"length\", _.random(20,500));\r",
+									"pm.variables.set(\"width\", _.random(20,500));\r",
+									"pm.variables.set(\"height\", _.random(20,500));\r",
+									"pm.variables.set(\"weight\", _.random(100,1000));\r",
+									"pm.variables.set(\"piecesPerStorageBox\", _.random(1,500));\r",
+									"pm.variables.set(\"plannedSalesPerWeek\", _.random(1,200000));\r",
+									"pm.variables.set(\"minimumIncomingAmount\", _.random(1,1000));\r",
+									"\r",
+									"var categories = [\"Lebensmittel\", \"Tiernahrung\", \"Kitex\"];\r",
+									"pm.variables.set(\"category\", categories[Math.floor(Math.random() * categories.length)]);\r",
+									"\r",
+									"var statuses = [\"active\", \"inactive\"];\r",
+									"pm.variables.set(\"status\", statuses[Math.floor(Math.random() * statuses.length)]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"length\": {{length}},\r\n    \"height\": {{height}},\r\n    \"weight\": {{weight}},\r\n    \"piecesPerStorageBox\": {{piecesPerStorageBox}},\r\n    \"category\": \"{{category}}\",\r\n    \"dangerousGoods\": \"1\",\r\n    \"plannedSalesPerWeek\": {{plannedSalesPerWeek}},\r\n    \"minimumIncomingAmount\": {{minimumIncomingAmount}},\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/articles?articleId={{articleId}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"articles"
+							],
+							"query": [
+								{
+									"key": "articleId",
+									"value": "{{articleId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Article - Error - Empty Length",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Error 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.expect(pm.response.json().body[0]).to.eql(\"length must not be null\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uuid = require('uuid');\r",
+									"var articleId = uuid.v4();\r",
+									"\r",
+									"pm.variables.set(\"articleId\", articleId);\r",
+									"pm.variables.set(\"length\", _.random(20,500));\r",
+									"pm.variables.set(\"width\", _.random(20,500));\r",
+									"pm.variables.set(\"height\", _.random(20,500));\r",
+									"pm.variables.set(\"weight\", _.random(100,1000));\r",
+									"pm.variables.set(\"piecesPerStorageBox\", _.random(1,500));\r",
+									"pm.variables.set(\"plannedSalesPerWeek\", _.random(1,200000));\r",
+									"pm.variables.set(\"minimumIncomingAmount\", _.random(1,1000));\r",
+									"\r",
+									"var categories = [\"Lebensmittel\", \"Tiernahrung\", \"Kitex\"];\r",
+									"pm.variables.set(\"category\", categories[Math.floor(Math.random() * categories.length)]);\r",
+									"\r",
+									"var statuses = [\"active\", \"inactive\"];\r",
+									"pm.variables.set(\"status\", statuses[Math.floor(Math.random() * statuses.length)]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"width\": {{width}},\r\n    \"height\": {{height}},\r\n    \"weight\": {{weight}},\r\n    \"piecesPerStorageBox\": {{piecesPerStorageBox}},\r\n    \"category\": \"{{category}}\",\r\n    \"dangerousGoods\": \"1\",\r\n    \"plannedSalesPerWeek\": {{plannedSalesPerWeek}},\r\n    \"minimumIncomingAmount\": {{minimumIncomingAmount}},\r\n    \"status\": \"{{status}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/articles?articleId={{articleId}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"articles"
+							],
+							"query": [
+								{
+									"key": "articleId",
+									"value": "{{articleId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create Article - Error - Invalid Category",
 					"event": [
 						{
@@ -222,6 +730,420 @@
 								{
 									"key": "articleId",
 									"value": "{{articleId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Location",
+			"item": [
+				{
+					"name": "Create Location",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Stock was updated.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"ok\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/handlingUnits?handlingUnitId=L0001",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"handlingUnits"
+							],
+							"query": [
+								{
+									"key": "handlingUnitId",
+									"value": "L0001"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Stock",
+			"item": [
+				{
+					"name": "Create Stock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"$articleId = pm.collectionVariables.get(\"ARTILE_ID\");\r",
+									"\r",
+									"pm.variables.set(\"articleId\", $articleId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"stocks\": [\r\n    {\r\n      \"quantity\": 10,\r\n      \"handlingUnit\": \"L0001\",\r\n      \"article\": \"{{articleId}}\",\r\n      \"status\": \"ok\"\r\n    }\r\n  ],\r\n  \"hasApproachingBoxes\": true,\r\n  \"status\": \"ok\",\r\n  \"category\": \"Rest\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/stocks?locationId=L0001",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"stocks"
+							],
+							"query": [
+								{
+									"key": "locationId",
+									"value": "L0001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Stock - Dummy Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"stocks\": [\r\n    {\r\n      \"quantity\": 10,\r\n      \"handlingUnit\": \"L0001\",\r\n      \"status\": \"ok\"\r\n    }\r\n  ],\r\n  \"hasApproachingBoxes\": true,\r\n  \"status\": \"ok\",\r\n  \"category\": \"Rest\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/stocks?locationId=L0001",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"stocks"
+							],
+							"query": [
+								{
+									"key": "locationId",
+									"value": "L0001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Stock - Error - Invalid Location",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"$locationId = pm.variables.get(\"locationId\")\r",
+									"\r",
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Location \" + $locationId + \" does not exist\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uuid = require('uuid');\r",
+									"var locationId = uuid.v4();\r",
+									"\r",
+									"$articleId = pm.collectionVariables.get(\"ARTILE_ID\");\r",
+									"\r",
+									"pm.variables.set(\"articleId\", $articleId);\r",
+									"pm.variables.set(\"locationId\", locationId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"stocks\": [\r\n    {\r\n      \"quantity\": 10,\r\n      \"handlingUnit\": \"L0001\",\r\n      \"article\": \"{{articleId}}\",\r\n      \"status\": \"ok\"\r\n    }\r\n  ],\r\n  \"hasApproachingBoxes\": true,\r\n  \"status\": \"ok\",\r\n  \"category\": \"Rest\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/stocks?locationId={{locationId}}",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"stocks"
+							],
+							"query": [
+								{
+									"key": "locationId",
+									"value": "{{locationId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Stock - Error - Invalid Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"$category = pm.variables.get(\"category\")\r",
+									"\r",
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Location category \" + $category + \" does not exist\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uuid = require('uuid');\r",
+									"var category = uuid.v4();\r",
+									"\r",
+									"$articleId = pm.collectionVariables.get(\"ARTILE_ID\");\r",
+									"\r",
+									"pm.variables.set(\"articleId\", $articleId);\r",
+									"pm.variables.set(\"category\", category);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"stocks\": [\r\n    {\r\n      \"quantity\": 10,\r\n      \"handlingUnit\": \"L0001\",\r\n      \"article\": \"{{articleId}}\",\r\n      \"status\": \"ok\"\r\n    }\r\n  ],\r\n  \"hasApproachingBoxes\": true,\r\n  \"status\": \"ok\",\r\n  \"category\": \"{{category}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/stocks?locationId=L0001",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"stocks"
+							],
+							"query": [
+								{
+									"key": "locationId",
+									"value": "L0001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Stock - Error - Invalid Handling Unit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"$handlingUnit = pm.variables.get(\"handlingUnit\")\r",
+									"\r",
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Handling unit \" + $handlingUnit + \" does not exist\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uuid = require('uuid');\r",
+									"var handlingUnit = uuid.v4();\r",
+									"\r",
+									"$articleId = pm.collectionVariables.get(\"ARTILE_ID\");\r",
+									"\r",
+									"pm.variables.set(\"articleId\", $articleId);\r",
+									"pm.variables.set(\"handlingUnit\", handlingUnit);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"stocks\": [\r\n    {\r\n      \"quantity\": 10,\r\n      \"handlingUnit\": \"{{handlingUnit}}\",\r\n      \"article\": \"{{articleId}}\",\r\n      \"status\": \"ok\"\r\n    }\r\n  ],\r\n  \"hasApproachingBoxes\": true,\r\n  \"status\": \"ok\",\r\n  \"category\": \"Rest\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/stocks?locationId=L0001",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"stocks"
+							],
+							"query": [
+								{
+									"key": "locationId",
+									"value": "L0001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Stock - Error - Invalid Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"$articleId = pm.variables.get(\"articleId\")\r",
+									"\r",
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"    pm.expect(pm.response.json().message).to.eql(\"Article \" + $articleId + \" does not exist\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uuid = require('uuid');\r",
+									"var articleId = uuid.v4();\r",
+									"\r",
+									"pm.variables.set(\"articleId\", articleId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"stocks\": [\r\n    {\r\n      \"quantity\": 10,\r\n      \"handlingUnit\": \"L0001\",\r\n      \"article\": \"{{articleId}}\",\r\n      \"status\": \"ok\"\r\n    }\r\n  ],\r\n  \"hasApproachingBoxes\": true,\r\n  \"status\": \"ok\",\r\n  \"category\": \"Rest\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlClient}}/stocks?locationId=L0001",
+							"host": [
+								"{{baseUrlClient}}"
+							],
+							"path": [
+								"stocks"
+							],
+							"query": [
+								{
+									"key": "locationId",
+									"value": "L0001"
 								}
 							]
 						}
@@ -1693,7 +2615,7 @@
 								"exec": [
 									"pm.test(\"Status code is 404\", function () {",
 									"    pm.response.to.have.status(404);",
-									"    pm.expect(pm.response.json().message).to.eql(\"Device bft024 not found);",
+									"    pm.expect(pm.response.json().message).to.eql(\"Device bft024 not found\");",
 									"});"
 								],
 								"type": "text/javascript"
