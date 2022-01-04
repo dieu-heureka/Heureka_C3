@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "58529586-c139-4ecd-afd0-10faedc8d12b",
+		"_postman_id": "a6b35002-048d-4c78-8a39-85ddb1a7a41f",
 		"name": "Loxxess.Lx1.LosConnector",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -107,7 +107,7 @@
 									"var uuid = require('uuid');\r",
 									"var articleId = uuid.v4();\r",
 									"\r",
-									"pm.collectionVariables.set(\"ARTILE_ID\", articleId);\r",
+									"pm.collectionVariables.set(\"ARTICLE_ID\", articleId);\r",
 									"\r",
 									"pm.variables.set(\"articleId\", articleId);\r",
 									"pm.variables.set(\"length\", _.random(20,500));\r",
@@ -169,7 +169,7 @@
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"$articleId = pm.collectionVariables.get(\"ARTILE_ID\");\r",
+									"$articleId = pm.collectionVariables.get(\"ARTICLE_ID\");\r",
 									"\r",
 									"const body = pm.response.json();\r",
 									"\r",
@@ -217,7 +217,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlClient}}/articles?articleId={{ARTILE_ID}}",
+							"raw": "{{baseUrlClient}}/articles?articleId={{ARTICLE_ID}}",
 							"host": [
 								"{{baseUrlClient}}"
 							],
@@ -227,7 +227,7 @@
 							"query": [
 								{
 									"key": "articleId",
-									"value": "{{ARTILE_ID}}"
+									"value": "{{ARTICLE_ID}}"
 								}
 							]
 						}
@@ -748,7 +748,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Stock was updated.\", function () {\r",
+									"pm.test(\"Location was updated.\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
 								],
@@ -809,7 +809,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"$articleId = pm.collectionVariables.get(\"ARTILE_ID\");\r",
+									"$articleId = pm.collectionVariables.get(\"ARTICLE_ID\");\r",
 									"\r",
 									"pm.variables.set(\"articleId\", $articleId);"
 								],
@@ -925,7 +925,7 @@
 									"var uuid = require('uuid');\r",
 									"var locationId = uuid.v4();\r",
 									"\r",
-									"$articleId = pm.collectionVariables.get(\"ARTILE_ID\");\r",
+									"$articleId = pm.collectionVariables.get(\"ARTICLE_ID\");\r",
 									"\r",
 									"pm.variables.set(\"articleId\", $articleId);\r",
 									"pm.variables.set(\"locationId\", locationId);"
@@ -988,7 +988,7 @@
 									"var uuid = require('uuid');\r",
 									"var category = uuid.v4();\r",
 									"\r",
-									"$articleId = pm.collectionVariables.get(\"ARTILE_ID\");\r",
+									"$articleId = pm.collectionVariables.get(\"ARTICLE_ID\");\r",
 									"\r",
 									"pm.variables.set(\"articleId\", $articleId);\r",
 									"pm.variables.set(\"category\", category);"
@@ -1051,7 +1051,7 @@
 									"var uuid = require('uuid');\r",
 									"var handlingUnit = uuid.v4();\r",
 									"\r",
-									"$articleId = pm.collectionVariables.get(\"ARTILE_ID\");\r",
+									"$articleId = pm.collectionVariables.get(\"ARTICLE_ID\");\r",
 									"\r",
 									"pm.variables.set(\"articleId\", $articleId);\r",
 									"pm.variables.set(\"handlingUnit\", handlingUnit);"
@@ -1234,7 +1234,7 @@
 									"for (var _i = 1; _i <= 15; _i++) {\r",
 									"    var orderLine = {\r",
 									"        line: _i.toString(),\r",
-									"        article: \"{{ARTILE_ID}}\",\r",
+									"        article: \"{{ARTICLE_ID}}\",\r",
 									"        quantity: _.random(1,200)\r",
 									"    };\r",
 									"\r",
@@ -1321,7 +1321,7 @@
 									"for (var _i = 1; _i <= 15; _i++) {\r",
 									"    var orderLine = {\r",
 									"        line: _i.toString(),\r",
-									"        article: \"{{ARTILE_ID}}\",\r",
+									"        article: \"{{ARTICLE_ID}}\",\r",
 									"        quantity: _.random(1,200)\r",
 									"    };\r",
 									"\r",
@@ -1409,7 +1409,7 @@
 									"for (var _i = 1; _i <= 15; _i++) {\r",
 									"    var orderLine = {\r",
 									"        line: _i.toString(),\r",
-									"        article: \"{{ARTILE_ID}}\",\r",
+									"        article: \"{{ARTICLE_ID}}\",\r",
 									"        quantity: _.random(1,200)\r",
 									"    };\r",
 									"\r",
@@ -1498,7 +1498,7 @@
 									"for (var _i = 1; _i <= 15; _i++) {\r",
 									"    var orderLine = {\r",
 									"        line: _i.toString(),\r",
-									"        article: \"{{ARTILE_ID}}\",\r",
+									"        article: \"{{ARTICLE_ID}}\",\r",
 									"        quantity: _.random(1,200)\r",
 									"    };\r",
 									"\r",
@@ -1586,7 +1586,7 @@
 									"for (var _i = 1; _i <= 15; _i++) {\r",
 									"    var orderLine = {\r",
 									"        line: _i.toString(),\r",
-									"        article: \"{{ARTILE_ID}}\",\r",
+									"        article: \"{{ARTICLE_ID}}\",\r",
 									"        quantity: _.random(1,200)\r",
 									"    };\r",
 									"\r",
@@ -2742,7 +2742,7 @@
 			"value": "109"
 		},
 		{
-			"key": "ARTILE_ID",
+			"key": "ARTICLE_ID",
 			"value": ""
 		},
 		{
